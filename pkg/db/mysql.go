@@ -16,4 +16,8 @@ func Connect() {
 
 	db.SetMaxIdleConns(10)
 
+	if err := db.Ping(); err != nil {
+		log.Printf("connection is not ok: %v", err)
+	}
+
 }
