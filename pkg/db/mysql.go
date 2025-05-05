@@ -1,4 +1,4 @@
-package habit
+package db
 
 import (
 	"database/sql"
