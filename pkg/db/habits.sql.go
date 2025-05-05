@@ -7,7 +7,22 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
+
+const createHabit = `-- name: CreateHabit :execresult
+INSERT INTO habits(id, name, created_at) VALUES (?, ?, ?)
+`
+
+type CreateHabitParams struct {
+	ID        int32
+	Name      string
+	CreatedAt sql.NullTime
+}
+
+func (q *Queries) CreateHabit(ctx context.Context, arg CreateHabitParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, createHabit, arg.ID, arg.Name, arg.CreatedAt)
+}
 
 const listHabits = `-- name: ListHabits :many
 SELECT id, name, created_at FROM habits
