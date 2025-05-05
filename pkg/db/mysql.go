@@ -7,9 +7,10 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func Connect() {
+func Connect() (*sql.DB, error) {
 
-	db, err := sql.Open("mysql", "root:root@habits")
+	dsn := "root:root@tcp(localhost:3306)/habits"
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		log.Printf("Error connecting to database: %v", err)
 	}
@@ -20,4 +21,5 @@ func Connect() {
 		log.Printf("connection is not ok: %v", err)
 	}
 
+	return db, nil
 }
