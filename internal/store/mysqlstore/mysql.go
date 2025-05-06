@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func ConnectDB(datasource string) *sql.DB {
+func ConnectDB(datasource string) (*sql.DB, error) {
 
 	db, err := sql.Open("mysql", datasource)
 	if err != nil {
@@ -16,4 +16,5 @@ func ConnectDB(datasource string) *sql.DB {
 		log.Printf("Failed to ping MySQL: %v", err)
 	}
 
+	return db, nil
 }
