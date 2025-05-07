@@ -1,0 +1,12 @@
+version: "2"
+sql:
+  - engine: "mysql"
+    queries: "store/mysqlstore/queries.sql"
+    schema: "store/mysqlstore/models.sql"
+    gen:
+      go:
+        package: "mysqlstore"
+        out: "store/mysqlstore"
+        emit_interface: false
+        emit_json_tags: true
+        emit_exact_table_names: false
