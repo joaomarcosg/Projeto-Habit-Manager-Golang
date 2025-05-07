@@ -2,7 +2,9 @@ package main
 
 import (
 	"log"
+	"log/slog"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/habit"
@@ -11,6 +13,13 @@ import (
 
 func main() {
 
+	if err := run(); err != nil {
+		slog.Error("failed to execute code", "error", err)
+		os.Exit(1)
+	}
+
+	slog.Info("all system offline")
+
 }
 
 func run() error {
@@ -18,7 +27,7 @@ func run() error {
 	dsn := "mysql://root:root@tcp(localhost:3306)/habits"
 	sqlDB, err := mysqlstore.ConnectDB(dsn)
 	if err != nil {
-		log.Printf("Failed to connect: %v", err)
+		log.Printf("failed to connect: %v", err)
 	}
 
 	handler := habit.NewHandler(sqlDB)
