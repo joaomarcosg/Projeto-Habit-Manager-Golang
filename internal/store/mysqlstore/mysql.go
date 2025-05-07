@@ -3,6 +3,8 @@ package mysqlstore
 import (
 	"database/sql"
 	"log"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func ConnectDB(datasource string) (*sql.DB, error) {
