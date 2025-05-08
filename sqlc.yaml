@@ -1,8 +1,8 @@
 version: "2"
 sql:
   - engine: "mysql"
-    queries: "store/mysqlstore/queries.sql"
-    schema: "store/mysqlstore/migrations"
+    queries: "internal/store/mysqlstore/queries.sql"
+    schema: "internal/store/mysqlstore/migrations"
     gen:
       go:
         package: "mysqlstore"
