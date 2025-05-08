@@ -2,7 +2,7 @@ version: "2"
 sql:
   - engine: "mysql"
     queries: "store/mysqlstore/queries.sql"
-    schema: "/store/mysqlstore/schema.sql"
+    schema: "store/mysqlstore/schema.sql"
     gen:
       go:
         package: "mysqlstore"
