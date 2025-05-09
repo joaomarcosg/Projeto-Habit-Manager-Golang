@@ -1,0 +1,11 @@
+version: "2"
+sql:
+  - engine: "mysql"
+    queries: "queries.sql"
+    schema: "./migrations"
+    gen:
+      go:
+        package: "mysqlstore"
+        out: "."
+        emit_interface: false
+        emit_json_tags: true
