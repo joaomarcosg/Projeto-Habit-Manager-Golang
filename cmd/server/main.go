@@ -30,7 +30,11 @@ func run() error {
 		log.Printf("failed to connect: %v", err)
 	}
 
-	handler := habit.NewHandler(sqlDB)
+	queries := mysqlstore.New(sqlDB)
+	repo := mysqlstore.NewHabitRepository(queries)
+	svc := habit.NewService(repo)
+
+	handler := habit.NewHandler(svc)
 
 	s := http.Server{
 		ReadTimeout:  10 * time.Second,
