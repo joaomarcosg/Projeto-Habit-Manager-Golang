@@ -24,7 +24,7 @@ func main() {
 
 func run() error {
 
-	dsn := "mysql://root:root@tcp(localhost:3306)/habits"
+	dsn := "root:root@tcp(localhost:3306)/habits?parseTime=true"
 	sqlDB, err := mysqlstore.ConnectDB(dsn)
 	if err != nil {
 		log.Printf("failed to connect: %v", err)

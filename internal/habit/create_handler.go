@@ -2,6 +2,7 @@ package habit
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -20,6 +21,7 @@ func handleCreateHabit(svc *Service) http.HandlerFunc {
 		}
 
 		if err := svc.CreateHabit(r.Context(), input.Name); err != nil {
+			log.Printf("failed to create habit: %v", err)
 			sendJSON(w, apiResponse{Error: "could not create habit"}, http.StatusInternalServerError)
 			return
 		}
