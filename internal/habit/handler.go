@@ -7,6 +7,11 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
+type apiResponse struct {
+	Error string `json:"error,omitempty"`
+	Data  any    `json:"data,omitempty"`
+}
+
 func NewHandler(svc *Service) http.Handler {
 
 	r := chi.NewMux()
