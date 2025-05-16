@@ -4,8 +4,8 @@ ADD COLUMN description TEXT NOT NULL,
 ADD COLUMN frequency SET(
     'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'
 ),
-ADD COLUMN start_date DATE,
-ADD COLUMN target_date DATE,
+ADD COLUMN start_date DATE NOT NULL DEFAULT '2025-01-01',
+ADD COLUMN target_date DATE NOT NULL DEFAULT '2025-01-01',
 ADD COLUMN priority TINYINT UNSIGNED NOT NULL CHECK (priority BETWEEN 1 AND 10),
 ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 MODIFY COLUMN name VARCHAR(100) NOT NULL;
