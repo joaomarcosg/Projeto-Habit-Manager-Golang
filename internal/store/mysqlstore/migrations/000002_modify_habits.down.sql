@@ -1,0 +1,1 @@
+ALTER TABLE habits DROP COLUMN category, description, frequency, start_date, target_date, priority;

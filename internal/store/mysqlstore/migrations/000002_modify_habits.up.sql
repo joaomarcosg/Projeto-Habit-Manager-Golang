@@ -1,0 +1,11 @@
+ALTER TABLE habits
+ADD COLUMN category VARCHAR(100) UNIQUE NOT NULL,
+ADD COLUMN description TEXT NOT NULL,
+ADD COLUMN frequency SET(
+    'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'
+),
+ADD COLUMN start_date DATE NOT NULL,
+ADD COLUMN target_date DATE NOT NULL,
+ADD COLUMN priority TINYINT UNSIGNED NOT NULL CHECK (priority BETWEEN 1 AND 10),
+ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+MODIFY COLUMN name VARCHAR(100) NOT NULL;
