@@ -1,7 +1,35 @@
--- name: CreatHabit :execresult
-INSERT INTO habits (name)
-VALUES (?);
+-- name: CreateHabit :execresult
+INSERT INTO habits (
+    name,
+    category,
+    description,
+    frequency,
+    start_date,
+    target_date,
+    priority,
+)
+VALUES (?, ?, ?, ?, ?, ?, ?);
 
 -- name: ListHabits :many
 SELECT * FROM habits
-ORDER BY created_at DESC;
+ORDER BY id;
+
+-- name: GetHabitById :one
+SELECT * FROM habits
+WHERE id = ?;
+
+-- name: DeleteHabit :exec
+DELETE FROM habits
+WHERE id = ?;
+
+-- UpdateHabit :exec
+UPDATE habits
+SET
+    name = ?,
+    category = ?,
+    description = ?,
+    frequency = ?,
+    start_date = ?,
+    target_date = ?,
+    priority = ?,
+WHERE id = ?;
