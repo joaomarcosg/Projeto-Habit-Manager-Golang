@@ -6,10 +6,67 @@ package mysqlstore
 
 import (
 	"database/sql"
+	"database/sql/driver"
+	"fmt"
+	"time"
 )
 
+type HabitsFrequency string
+
+const (
+	HabitsFrequencySunday    HabitsFrequency = "sunday"
+	HabitsFrequencyMonday    HabitsFrequency = "monday"
+	HabitsFrequencyTuesday   HabitsFrequency = "tuesday"
+	HabitsFrequencyWednesday HabitsFrequency = "wednesday"
+	HabitsFrequencyThursday  HabitsFrequency = "thursday"
+	HabitsFrequencyFriday    HabitsFrequency = "friday"
+	HabitsFrequencySaturday  HabitsFrequency = "saturday"
+)
+
+func (e *HabitsFrequency) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = HabitsFrequency(s)
+	case string:
+		*e = HabitsFrequency(s)
+	default:
+		return fmt.Errorf("unsupported scan type for HabitsFrequency: %T", src)
+	}
+	return nil
+}
+
+type NullHabitsFrequency struct {
+	HabitsFrequency HabitsFrequency `json:"habits_frequency"`
+	Valid           bool            `json:"valid"` // Valid is true if HabitsFrequency is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullHabitsFrequency) Scan(value interface{}) error {
+	if value == nil {
+		ns.HabitsFrequency, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.HabitsFrequency.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullHabitsFrequency) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.HabitsFrequency), nil
+}
+
 type Habit struct {
-	ID        int64        `json:"id"`
-	Name      string       `json:"name"`
-	CreatedAt sql.NullTime `json:"created_at"`
+	ID          int32               `json:"id"`
+	Name        string              `json:"name"`
+	Category    string              `json:"category"`
+	Description string              `json:"description"`
+	Frequency   NullHabitsFrequency `json:"frequency"`
+	StartDate   time.Time           `json:"start_date"`
+	TargetDate  time.Time           `json:"target_date"`
+	Priority    uint8               `json:"priority"`
+	CreatedAt   sql.NullTime        `json:"created_at"`
+	UpdatedAt   sql.NullTime        `json:"updated_at"`
 }

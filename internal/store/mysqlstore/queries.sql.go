@@ -8,20 +8,80 @@ package mysqlstore
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
-const creatHabit = `-- name: CreatHabit :execresult
-INSERT INTO habits (name)
-VALUES (?)
+const createHabit = `-- name: CreateHabit :execresult
+INSERT INTO habits (
+    name,
+    category,
+    description,
+    frequency,
+    start_date,
+    target_date,
+    priority
+)
+VALUES (?, ?, ?, ?, ?, ?, ?)
 `
 
-func (q *Queries) CreatHabit(ctx context.Context, name string) (sql.Result, error) {
-	return q.db.ExecContext(ctx, creatHabit, name)
+type CreateHabitParams struct {
+	Name        string              `json:"name"`
+	Category    string              `json:"category"`
+	Description string              `json:"description"`
+	Frequency   NullHabitsFrequency `json:"frequency"`
+	StartDate   time.Time           `json:"start_date"`
+	TargetDate  time.Time           `json:"target_date"`
+	Priority    uint8               `json:"priority"`
+}
+
+func (q *Queries) CreateHabit(ctx context.Context, arg CreateHabitParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, createHabit,
+		arg.Name,
+		arg.Category,
+		arg.Description,
+		arg.Frequency,
+		arg.StartDate,
+		arg.TargetDate,
+		arg.Priority,
+	)
+}
+
+const deleteHabit = `-- name: DeleteHabit :exec
+DELETE FROM habits
+WHERE id = ?
+`
+
+func (q *Queries) DeleteHabit(ctx context.Context, id int32) error {
+	_, err := q.db.ExecContext(ctx, deleteHabit, id)
+	return err
+}
+
+const getHabitById = `-- name: GetHabitById :one
+SELECT id, name, category, description, frequency, start_date, target_date, priority, created_at, updated_at FROM habits
+WHERE id = ?
+`
+
+func (q *Queries) GetHabitById(ctx context.Context, id int32) (Habit, error) {
+	row := q.db.QueryRowContext(ctx, getHabitById, id)
+	var i Habit
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Category,
+		&i.Description,
+		&i.Frequency,
+		&i.StartDate,
+		&i.TargetDate,
+		&i.Priority,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
 }
 
 const listHabits = `-- name: ListHabits :many
-SELECT id, name, created_at FROM habits
-ORDER BY created_at DESC
+SELECT id, name, category, description, frequency, start_date, target_date, priority, created_at, updated_at FROM habits
+ORDER BY id
 `
 
 func (q *Queries) ListHabits(ctx context.Context) ([]Habit, error) {
@@ -33,7 +93,18 @@ func (q *Queries) ListHabits(ctx context.Context) ([]Habit, error) {
 	var items []Habit
 	for rows.Next() {
 		var i Habit
-		if err := rows.Scan(&i.ID, &i.Name, &i.CreatedAt); err != nil {
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Category,
+			&i.Description,
+			&i.Frequency,
+			&i.StartDate,
+			&i.TargetDate,
+			&i.Priority,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -45,4 +116,42 @@ func (q *Queries) ListHabits(ctx context.Context) ([]Habit, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const updateHabit = `-- name: UpdateHabit :exec
+UPDATE habits
+SET
+    name = ?,
+    category = ?,
+    description = ?,
+    frequency = ?,
+    start_date = ?,
+    target_date = ?,
+    priority = ?
+WHERE id = ?
+`
+
+type UpdateHabitParams struct {
+	Name        string              `json:"name"`
+	Category    string              `json:"category"`
+	Description string              `json:"description"`
+	Frequency   NullHabitsFrequency `json:"frequency"`
+	StartDate   time.Time           `json:"start_date"`
+	TargetDate  time.Time           `json:"target_date"`
+	Priority    uint8               `json:"priority"`
+	ID          int32               `json:"id"`
+}
+
+func (q *Queries) UpdateHabit(ctx context.Context, arg UpdateHabitParams) error {
+	_, err := q.db.ExecContext(ctx, updateHabit,
+		arg.Name,
+		arg.Category,
+		arg.Description,
+		arg.Frequency,
+		arg.StartDate,
+		arg.TargetDate,
+		arg.Priority,
+		arg.ID,
+	)
+	return err
 }
