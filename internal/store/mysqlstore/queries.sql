@@ -6,7 +6,7 @@ INSERT INTO habits (
     frequency,
     start_date,
     target_date,
-    priority,
+    priority
 )
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
@@ -22,7 +22,7 @@ WHERE id = ?;
 DELETE FROM habits
 WHERE id = ?;
 
--- UpdateHabit :exec
+-- name: UpdateHabit :exec
 UPDATE habits
 SET
     name = ?,
@@ -31,5 +31,5 @@ SET
     frequency = ?,
     start_date = ?,
     target_date = ?,
-    priority = ?,
+    priority = ?
 WHERE id = ?;
