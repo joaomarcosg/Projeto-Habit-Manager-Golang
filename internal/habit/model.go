@@ -13,6 +13,4 @@ type Habit struct {
 	StartDate   time.Time `json:"start_date"`
 	TargetDate  time.Time `json:"target_date"`
 	Priority    uint8     `json:"priority"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
 }
