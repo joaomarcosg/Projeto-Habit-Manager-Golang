@@ -4,10 +4,19 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
+
+	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/entity"
 )
 
 type inputHabit struct {
-	Name string `json:"name"`
+	Name        string    `json:"name"`
+	Category    string    `json:"category"`
+	Description string    `json:"description"`
+	Frequency   string    `json:"frequency"`
+	StartDate   time.Time `json:"start_date"`
+	TargetDate  time.Time `json:"target_date"`
+	Priority    uint8     `json:"priority"`
 }
 
 func handleCreateHabit(svc *Service) http.HandlerFunc {
@@ -20,12 +29,25 @@ func handleCreateHabit(svc *Service) http.HandlerFunc {
 			return
 		}
 
-		if err := svc.CreateHabit(r.Context(), input.Name); err != nil {
+		habit := entity.Habit{
+			Name:        input.Name,
+			Category:    input.Category,
+			Description: input.Description,
+			Frequency:   input.Frequency,
+			StartDate:   input.StartDate,
+			TargetDate:  input.TargetDate,
+			Priority:    input.Priority,
+		}
+
+		var id int64
+
+		id, err := svc.CreateHabit(r.Context(), habit)
+		if err != nil {
 			log.Printf("failed to create habit: %v", err)
 			sendJSON(w, apiResponse{Error: "could not create habit"}, http.StatusInternalServerError)
 			return
 		}
 
-		sendJSON(w, apiResponse{Data: input}, http.StatusCreated)
+		sendJSON(w, apiResponse{ID: id}, http.StatusCreated)
 	}
 }
