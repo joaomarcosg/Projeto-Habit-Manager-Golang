@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"log/slog"
 	"net/http"
+
+	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/entity"
 )
 
 type HabitRepository interface {
-	CreateHabit(ctx context.Context, name string) error
+	CreateHabit(ctx context.Context, habit entity.Habit) (int64, error)
 }
 
 func sendJSON(w http.ResponseWriter, resp apiResponse, status int) {
