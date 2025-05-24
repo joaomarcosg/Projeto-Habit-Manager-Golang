@@ -17,3 +17,7 @@ func NewService(repo HabitRepository) *Service {
 func (s *Service) CreateHabit(ctx context.Context, habit entity.Habit) (int64, error) {
 	return s.repo.CreateHabit(ctx, habit)
 }
+
+func (s *Service) ListHabits(ctx context.Context) ([]entity.Habit, error) {
+	return s.repo.ListHabits(ctx)
+}
