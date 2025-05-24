@@ -39,3 +39,33 @@ func (r *HabitRepository) CreateHabit(ctx context.Context, habit entity.Habit) (
 
 	return id, nil
 }
+
+func (r *HabitRepository) ListHabits(ctx context.Context) ([]entity.Habit, error) {
+
+	result, err := r.q.ListHabits(ctx)
+	if err != nil {
+		return []entity.Habit{}, err
+	}
+
+	habits := make([]entity.Habit, len(result))
+
+	for i, h := range result {
+		freq := ""
+		if h.Frequency.Valid {
+			freq = string(h.Frequency.HabitsFrequency)
+		}
+		habits[i] = entity.Habit{
+			ID:          int64(h.ID),
+			Name:        h.Name,
+			Category:    h.Category,
+			Description: h.Description,
+			Frequency:   freq,
+			StartDate:   h.StartDate,
+			TargetDate:  h.TargetDate,
+			Priority:    h.Priority,
+		}
+	}
+
+	return habits, nil
+
+}
