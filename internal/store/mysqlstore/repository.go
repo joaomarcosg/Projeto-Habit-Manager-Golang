@@ -69,3 +69,14 @@ func (r *HabitRepository) ListHabits(ctx context.Context) ([]entity.Habit, error
 	return habits, nil
 
 }
+
+func (r *HabitRepository) DeleteHabit(ctx context.Context, id int64) (bool, error) {
+
+	err := r.q.DeleteHabit(ctx, int32(id))
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+
+}
