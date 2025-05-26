@@ -53,14 +53,18 @@ func handleCreateHabit(svc *Service) http.HandlerFunc {
 	}
 }
 
-func ListHabits(svc *Service) http.HandlerFunc {
+func handleListHabits(svc *Service) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		habits, err := svc.ListHabits(r.Context())
 		if err != nil {
 			slog.Error("failed to get habits", "error", err)
+			sendJSON(w, apiResponse{Error: "could not list habits"}, http.StatusInternalServerError)
+			return
 		}
+
+		sendJSON(w, apiResponse{Data: habits}, http.StatusOK)
 
 	}
 
