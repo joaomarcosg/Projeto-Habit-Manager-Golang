@@ -10,6 +10,7 @@ import (
 type apiResponse struct {
 	Error string `json:"error,omitempty"`
 	ID    int64  `json:"id,omitempty"`
+	Data  any    `json:"data,omitempty"`
 }
 
 func NewHandler(svc *Service) http.Handler {
