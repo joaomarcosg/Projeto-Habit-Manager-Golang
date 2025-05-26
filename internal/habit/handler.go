@@ -23,6 +23,7 @@ func NewHandler(svc *Service) http.Handler {
 
 	r.Post("/habits", handleCreateHabit(svc))
 	r.Get("/habits/list", handleListHabits(svc))
+	r.Delete("/habits/delete/{id:[0-9]+}", handleDeleteHabit(svc))
 
 	return r
 }
