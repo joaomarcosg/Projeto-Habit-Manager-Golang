@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"log/slog"
 	"net/http"
+	"strconv"
 	"time"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/entity"
 )
 
@@ -67,4 +69,28 @@ func handleListHabits(svc *Service) http.HandlerFunc {
 
 	}
 
+}
+
+func handleDeleteHabit(svc *Service) http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		idStr := chi.URLParam(r, "id")
+		id, err := strconv.ParseInt(idStr, 10, 64)
+		if err != nil {
+			sendJSON(w, apiResponse{Error: "invalid param"}, http.StatusBadRequest)
+			return
+		}
+
+		ok, err := svc.DeleteHabit(r.Context(), id)
+
+		if err != nil {
+			slog.Error("failed to delete habit", "error", err)
+			sendJSON(w, apiResponse{Error: "failed to delete habit"}, http.StatusInternalServerError)
+			return
+		}
+
+		sendJSON(w, apiResponse{Data: ok}, http.StatusOK)
+
+	}
 }
