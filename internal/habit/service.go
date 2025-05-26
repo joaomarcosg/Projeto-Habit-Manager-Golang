@@ -21,3 +21,7 @@ func (s *Service) CreateHabit(ctx context.Context, habit entity.Habit) (int64, e
 func (s *Service) ListHabits(ctx context.Context) ([]entity.Habit, error) {
 	return s.repo.ListHabits(ctx)
 }
+
+func (s *Service) DeleteHabit(ctx context.Context, id int64) (bool, error) {
+	return s.repo.DeleteHabit(ctx, id)
+}
