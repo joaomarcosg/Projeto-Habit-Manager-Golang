@@ -12,6 +12,7 @@ import (
 type HabitRepository interface {
 	CreateHabit(ctx context.Context, habit entity.Habit) (int64, error)
 	ListHabits(ctx context.Context) ([]entity.Habit, error)
+	DeleteHabit(ctx context.Context, id int64) (bool, error)
 }
 
 func sendJSON(w http.ResponseWriter, resp apiResponse, status int) {
