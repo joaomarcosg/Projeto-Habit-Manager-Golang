@@ -3,9 +3,12 @@ package habit
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
+	"time"
 
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/entity"
 )
@@ -33,6 +36,17 @@ func (m *MockHabitRepository) DeleteHabit(ctx context.Context, id int64) (bool, 
 	}
 
 	return false, nil
+}
+
+type HabitResponse struct {
+	ID          int64     `json:"id"`
+	Name        string    `json:"name"`
+	Category    string    `json:"category"`
+	Description string    `json:"description"`
+	Frequency   string    `json:"frequency"`
+	StartDate   time.Time `json:"start_date"`
+	TargetDate  time.Time `json:"target_date"`
+	Priority    int       `json:"priority"`
 }
 
 func TestCreateHabit(t *testing.T) {
@@ -70,6 +84,93 @@ func TestCreateHabit(t *testing.T) {
 
 	if len(mockRepo.Habits) != 1 {
 		t.Errorf("expected 1 habit in the repository, but there is %d", len(mockRepo.Habits))
+	}
+
+}
+
+func TestListHabits(t *testing.T) {
+
+	startDate := time.Date(2025, 5, 28, 0, 0, 0, 0, time.UTC)
+	targetDate := time.Date(2025, 6, 28, 0, 0, 0, 0, time.UTC)
+
+	mockRepo := &MockHabitRepository{
+
+		Habits: []entity.Habit{
+			{
+				ID:          1,
+				Name:        "ler",
+				Category:    "estudos",
+				Description: "ler livro",
+				Frequency:   "sunday,monday,tuesday,wednesday,thursday,friday,saturday",
+				StartDate:   startDate,
+				TargetDate:  targetDate,
+				Priority:    10,
+			},
+			{
+				ID:          2,
+				Name:        "treinar",
+				Category:    "saúde",
+				Description: "ir para academia",
+				Frequency:   "monday,tuesday,wednesday,thursday,friday",
+				StartDate:   startDate,
+				TargetDate:  targetDate,
+				Priority:    10,
+			},
+		},
+	}
+
+	service := NewService(mockRepo)
+	handler := handleListHabits(service)
+
+	req, err := http.NewRequest("GET", "/habits/list", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	response := httptest.NewRecorder()
+	handler.ServeHTTP(response, req)
+
+	if status := response.Code; status != http.StatusOK {
+		t.Errorf("incorrect status: receveid %v, expected %v", status, http.StatusOK)
+	}
+
+	var resp struct {
+		Data  []HabitResponse `json:"data"`
+		Error string          `json:"error,omitempty"`
+	}
+
+	err = json.Unmarshal(response.Body.Bytes(), &resp)
+	if err != nil {
+		t.Fatalf("failed to unmarshal response: %v", err)
+	}
+
+	got := resp.Data
+
+	expected := []HabitResponse{
+		{
+			ID:          1,
+			Name:        "ler",
+			Category:    "estudos",
+			Description: "ler livro",
+			Frequency:   "sunday,monday,tuesday,wednesday,thursday,friday,saturday",
+			StartDate:   startDate,
+			TargetDate:  targetDate,
+			Priority:    10,
+		},
+		{
+			ID:          2,
+			Name:        "treinar",
+			Category:    "saúde",
+			Description: "ir para academia",
+			Frequency:   "monday,tuesday,wednesday,thursday,friday",
+			StartDate:   startDate,
+			TargetDate:  targetDate,
+			Priority:    10,
+		},
+	}
+
+	if !reflect.DeepEqual(got, expected) {
+		t.Errorf("incorrect response\nreceived %#v\nexpected %#v", got, expected)
 	}
 
 }
