@@ -14,6 +14,6 @@ WHERE id = ?;
 SELECT * FROM users
 WHERE email = ?;
 
---name: DeleteUser: exec
+-- name: DeleteUser: exec
 DELETE FROM users
 WHERE id = ?;
