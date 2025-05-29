@@ -1,4 +1,4 @@
--- name: CreateUser: one
+-- name: CreateUser :one
 INSERT INTO users (
     name,
     email,
@@ -6,14 +6,14 @@ INSERT INTO users (
 )
 VALUES (?, ?, ?);
 
--- name: GetUserById: one
+-- name: GetUserById :one
 SELECT * FROM users
 WHERE id = ?;
 
--- name: GetUserByEmail: one
+-- name: GetUserByEmail :one
 SELECT * FROM users
 WHERE email = ?;
 
--- name: DeleteUser: exec
+-- name: DeleteUser :exec
 DELETE FROM users
 WHERE id = ?;
