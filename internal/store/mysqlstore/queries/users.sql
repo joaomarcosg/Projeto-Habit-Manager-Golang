@@ -1,10 +1,11 @@
 -- name: CreateUser :execresult
 INSERT INTO users (
+    id,
     name,
     email,
     password
 )
-VALUES (?, ?, ?);
+VALUES (?, ?, ?, ?);
 
 -- name: GetUserById :one
 SELECT * FROM users
