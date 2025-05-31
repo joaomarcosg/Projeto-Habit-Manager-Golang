@@ -15,6 +15,10 @@ type HabitRepository interface {
 	DeleteHabit(ctx context.Context, id int64) (bool, error)
 }
 
+type UserRepository interface {
+	CreateUser(ctx context.Context, user entity.User) (entity.User, error)
+}
+
 func sendJSON(w http.ResponseWriter, resp apiResponse, status int) {
 
 	data, err := json.Marshal(resp)
