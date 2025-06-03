@@ -9,3 +9,12 @@
 </div>
 
 ## 👨‍💻 Tecnologias
+
+| Tecnologia | Descrição |
+| ---------- | --------- |
+| Go         | Linguagem de programaçâo estaticamente tipada |
+| Chi        | Framework Go que facilita a criação der servidores HTTP |
+| MySQL      | Banco de dados relacional |
+| Docker     | Plataforma de software para implantar aplicativos em containers |
+
+## 📝 Descrição do projeto
