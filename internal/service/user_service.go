@@ -3,16 +3,16 @@ package service
 import (
 	"context"
 
-	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/api"
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/entity"
+	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService struct {
-	repo api.UserRepository
+	repo utils.UserRepository
 }
 
-func NewUserService(repo api.UserRepository) *UserService {
+func NewUserService(repo utils.UserRepository) *UserService {
 	return &UserService{repo: repo}
 }
 
@@ -21,7 +21,7 @@ func HashPassword(password string) (string, error) {
 	return string(bytes), err
 }
 
-func (s *UserService) CreateUser(ctx context.Context, name, email, password string) (entity.User, error) {
+func (us *UserService) CreateUser(ctx context.Context, name, email, password string) (entity.User, error) {
 
 	hash, err := HashPassword(password)
 	if err != nil {
@@ -34,5 +34,5 @@ func (s *UserService) CreateUser(ctx context.Context, name, email, password stri
 		Password: hash,
 	}
 
-	return s.repo.CreateUser(ctx, user)
+	return us.repo.CreateUser(ctx, user)
 }
