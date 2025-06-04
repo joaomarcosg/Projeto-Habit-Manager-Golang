@@ -6,9 +6,14 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/api"
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/entity"
 )
+
+type ApiResponse struct {
+	Error string `json:"error,omitempty"`
+	ID    int64  `json:"id,omitempty"`
+	Data  any    `json:"data,omitempty"`
+}
 
 type HabitRepository interface {
 	CreateHabit(ctx context.Context, habit entity.Habit) (int64, error)
@@ -20,12 +25,12 @@ type UserRepository interface {
 	CreateUser(ctx context.Context, user entity.User) (entity.User, error)
 }
 
-func sendJSON(w http.ResponseWriter, resp api.ApiResponse, status int) {
+func SendJSON(w http.ResponseWriter, resp ApiResponse, status int) {
 
 	data, err := json.Marshal(resp)
 	if err != nil {
 		slog.Error("failed to marshal json data", "error", err, "response", resp)
-		sendJSON(w, api.ApiResponse{Error: "something went wrong"}, http.StatusInternalServerError)
+		SendJSON(w, ApiResponse{Error: "something went wrong"}, http.StatusInternalServerError)
 		return
 	}
 
