@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net/http"
 
+	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/api"
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/entity"
 )
 
@@ -19,12 +20,12 @@ type UserRepository interface {
 	CreateUser(ctx context.Context, user entity.User) (entity.User, error)
 }
 
-func sendJSON(w http.ResponseWriter, resp apiResponse, status int) {
+func sendJSON(w http.ResponseWriter, resp api.ApiResponse, status int) {
 
 	data, err := json.Marshal(resp)
 	if err != nil {
 		slog.Error("failed to marshal json data", "error", err, "response", resp)
-		sendJSON(w, apiResponse{Error: "something went wrong"}, http.StatusInternalServerError)
+		sendJSON(w, api.ApiResponse{Error: "something went wrong"}, http.StatusInternalServerError)
 		return
 	}
 
