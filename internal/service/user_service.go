@@ -3,15 +3,16 @@ package service
 import (
 	"context"
 
+	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/api"
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/entity"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService struct {
-	repo UserRepository
+	repo api.UserRepository
 }
 
-func NewUserService(repo UserRepository) *UserService {
+func NewUserService(repo api.UserRepository) *UserService {
 	return &UserService{repo: repo}
 }
 
