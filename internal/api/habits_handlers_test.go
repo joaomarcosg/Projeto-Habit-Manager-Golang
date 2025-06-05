@@ -53,7 +53,7 @@ type HabitResponse struct {
 func TestCreateHabit(t *testing.T) {
 
 	mockRepo := &MockHabitRepository{}
-	service := services.NewService(mockRepo)
+	service := services.NewHabitService(mockRepo)
 
 	handler := handleCreateHabit(service)
 
@@ -120,7 +120,7 @@ func TestListHabits(t *testing.T) {
 		},
 	}
 
-	service := services.NewService(mockRepo)
+	service := services.NewHabitService(mockRepo)
 	handler := handleListHabits(service)
 
 	req, err := http.NewRequest("GET", "/habits/list", nil)
