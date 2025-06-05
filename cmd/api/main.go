@@ -7,7 +7,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/api"
+	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/services"
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/store/mysqlstore"
 )
 
@@ -31,17 +33,20 @@ func run() error {
 	}
 
 	queries := mysqlstore.New(sqlDB)
-	repo := mysqlstore.NewHabitRepository(queries)
-	svc := api.NewService(repo)
 
-	handler := api.NewHandler(svc)
+	habitRepo := mysqlstore.NewHabitRepository(queries)
+	habitSvc := services.NewHabitService(habitRepo)
+
+	r := chi.NewRouter()
+
+	r.Mount("/", api.NewHabitHandler(habitSvc))
 
 	s := http.Server{
 		ReadTimeout:  10 * time.Second,
 		IdleTimeout:  time.Minute,
 		WriteTimeout: 10 * time.Second,
 		Addr:         ":8080",
-		Handler:      handler,
+		Handler:      r,
 	}
 
 	if err := s.ListenAndServe(); err != nil {
