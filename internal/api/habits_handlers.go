@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/entity"
+	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/services"
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/utils"
 )
 
@@ -22,7 +23,7 @@ type inputHabit struct {
 	Priority    uint8     `json:"priority"`
 }
 
-func handleCreateHabit(svc *Service) http.HandlerFunc {
+func handleCreateHabit(svc *services.Service) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		var input inputHabit
@@ -55,7 +56,7 @@ func handleCreateHabit(svc *Service) http.HandlerFunc {
 	}
 }
 
-func handleListHabits(svc *Service) http.HandlerFunc {
+func handleListHabits(svc *services.Service) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
@@ -72,7 +73,7 @@ func handleListHabits(svc *Service) http.HandlerFunc {
 
 }
 
-func handleDeleteHabit(svc *Service) http.HandlerFunc {
+func handleDeleteHabit(svc *services.Service) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
