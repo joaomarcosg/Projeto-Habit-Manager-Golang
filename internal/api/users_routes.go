@@ -16,7 +16,7 @@ func NewUserHandler(svc *services.UserService) http.Handler {
 	r.Use(middleware.RequestID)
 	r.Use(middleware.Logger)
 
-	r.Post("/users/signup", handleSignupUser(svc))
+	r.Post("/signup", handleSignupUser(svc))
 
 	return r
 
