@@ -23,7 +23,7 @@ type inputHabit struct {
 	Priority    uint8     `json:"priority"`
 }
 
-func handleCreateHabit(svc *services.Service) http.HandlerFunc {
+func handleCreateHabit(svc *services.HabitService) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		var input inputHabit
@@ -56,7 +56,7 @@ func handleCreateHabit(svc *services.Service) http.HandlerFunc {
 	}
 }
 
-func handleListHabits(svc *services.Service) http.HandlerFunc {
+func handleListHabits(svc *services.HabitService) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
@@ -73,7 +73,7 @@ func handleListHabits(svc *services.Service) http.HandlerFunc {
 
 }
 
-func handleDeleteHabit(svc *services.Service) http.HandlerFunc {
+func handleDeleteHabit(svc *services.HabitService) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
