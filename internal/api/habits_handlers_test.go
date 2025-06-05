@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/entity"
+	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/services"
 )
 
 type MockHabitRepository struct {
@@ -52,7 +53,7 @@ type HabitResponse struct {
 func TestCreateHabit(t *testing.T) {
 
 	mockRepo := &MockHabitRepository{}
-	service := NewService(mockRepo)
+	service := services.NewService(mockRepo)
 
 	handler := handleCreateHabit(service)
 
@@ -119,7 +120,7 @@ func TestListHabits(t *testing.T) {
 		},
 	}
 
-	service := NewService(mockRepo)
+	service := services.NewService(mockRepo)
 	handler := handleListHabits(service)
 
 	req, err := http.NewRequest("GET", "/habits/list", nil)
