@@ -37,9 +37,13 @@ func run() error {
 	habitRepo := mysqlstore.NewHabitRepository(queries)
 	habitSvc := services.NewHabitService(habitRepo)
 
+	userRepo := mysqlstore.NewUserRepository(queries)
+	userSvc := services.NewUserService(userRepo)
+
 	r := chi.NewRouter()
 
 	r.Mount("/", api.NewHabitHandler(habitSvc))
+	r.Mount("/", api.NewUserHandler(userSvc))
 
 	s := http.Server{
 		ReadTimeout:  10 * time.Second,
