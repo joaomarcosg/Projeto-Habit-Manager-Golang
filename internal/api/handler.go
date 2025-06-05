@@ -5,9 +5,10 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/services"
 )
 
-func NewHandler(svc *Service) http.Handler {
+func NewHandler(svc *services.Service) http.Handler {
 
 	r := chi.NewMux()
 
