@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/entity"
+	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/utils"
 )
 
 type inputHabit struct {
@@ -27,7 +28,7 @@ func handleCreateHabit(svc *Service) http.HandlerFunc {
 		var input inputHabit
 
 		if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-			sendJSON(w, apiResponse{Error: "invalid body"}, http.StatusUnprocessableEntity)
+			utils.SendJSON(w, utils.ApiResponse{Error: "invalid body"}, http.StatusUnprocessableEntity)
 			return
 		}
 
@@ -46,11 +47,11 @@ func handleCreateHabit(svc *Service) http.HandlerFunc {
 		id, err := svc.CreateHabit(r.Context(), habit)
 		if err != nil {
 			slog.Error("failed to create habit", "error", err)
-			sendJSON(w, apiResponse{Error: "could not create habit"}, http.StatusInternalServerError)
+			utils.SendJSON(w, utils.ApiResponse{Error: "could not create habit"}, http.StatusInternalServerError)
 			return
 		}
 
-		sendJSON(w, apiResponse{ID: id}, http.StatusCreated)
+		utils.SendJSON(w, utils.ApiResponse{ID: id}, http.StatusCreated)
 	}
 }
 
@@ -61,11 +62,11 @@ func handleListHabits(svc *Service) http.HandlerFunc {
 		habits, err := svc.ListHabits(r.Context())
 		if err != nil {
 			slog.Error("failed to get habits", "error", err)
-			sendJSON(w, apiResponse{Error: "could not list habits"}, http.StatusInternalServerError)
+			utils.SendJSON(w, utils.ApiResponse{Error: "could not list habits"}, http.StatusInternalServerError)
 			return
 		}
 
-		sendJSON(w, apiResponse{Data: habits}, http.StatusOK)
+		utils.SendJSON(w, utils.ApiResponse{Data: habits}, http.StatusOK)
 
 	}
 
@@ -78,7 +79,7 @@ func handleDeleteHabit(svc *Service) http.HandlerFunc {
 		idStr := chi.URLParam(r, "id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
 		if err != nil {
-			sendJSON(w, apiResponse{Error: "invalid param"}, http.StatusBadRequest)
+			utils.SendJSON(w, utils.ApiResponse{Error: "invalid param"}, http.StatusBadRequest)
 			return
 		}
 
@@ -86,11 +87,11 @@ func handleDeleteHabit(svc *Service) http.HandlerFunc {
 
 		if err != nil {
 			slog.Error("failed to delete habit", "error", err)
-			sendJSON(w, apiResponse{Error: "failed to delete habit"}, http.StatusInternalServerError)
+			utils.SendJSON(w, utils.ApiResponse{Error: "failed to delete habit"}, http.StatusInternalServerError)
 			return
 		}
 
-		sendJSON(w, apiResponse{Data: ok}, http.StatusOK)
+		utils.SendJSON(w, utils.ApiResponse{Data: ok}, http.StatusOK)
 
 	}
 }
