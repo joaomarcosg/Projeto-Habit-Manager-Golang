@@ -42,8 +42,8 @@ func run() error {
 
 	r := chi.NewRouter()
 
-	r.Mount("/", api.NewHabitHandler(habitSvc))
-	r.Mount("/", api.NewUserHandler(userSvc))
+	r.Mount("/habits", api.NewHabitHandler(habitSvc))
+	r.Mount("/users", api.NewUserHandler(userSvc))
 
 	s := http.Server{
 		ReadTimeout:  10 * time.Second,
