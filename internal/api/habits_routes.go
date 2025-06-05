@@ -16,9 +16,9 @@ func NewHabitHandler(svc *services.HabitService) http.Handler {
 	r.Use(middleware.RequestID)
 	r.Use(middleware.Logger)
 
-	r.Post("/habits", handleCreateHabit(svc))
-	r.Get("/habits/list", handleListHabits(svc))
-	r.Delete("/habits/delete/{id:[0-9]+}", handleDeleteHabit(svc))
+	r.Post("/create", handleCreateHabit(svc))
+	r.Get("/list", handleListHabits(svc))
+	r.Delete("/delete/{id:[0-9]+}", handleDeleteHabit(svc))
 
 	return r
 }
