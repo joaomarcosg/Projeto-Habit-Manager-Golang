@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/habit"
+	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/api"
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/store/mysqlstore"
 )
 
@@ -32,9 +32,9 @@ func run() error {
 
 	queries := mysqlstore.New(sqlDB)
 	repo := mysqlstore.NewHabitRepository(queries)
-	svc := habit.NewService(repo)
+	svc := api.NewService(repo)
 
-	handler := habit.NewHandler(svc)
+	handler := api.NewHandler(svc)
 
 	s := http.Server{
 		ReadTimeout:  10 * time.Second,
