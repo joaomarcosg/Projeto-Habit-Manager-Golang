@@ -4,13 +4,14 @@ import (
 	"context"
 
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/entity"
+	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/utils"
 )
 
 type Service struct {
-	repo HabitRepository
+	repo utils.HabitRepository
 }
 
-func NewService(repo HabitRepository) *Service {
+func NewService(repo utils.HabitRepository) *Service {
 	return &Service{repo: repo}
 }
 
