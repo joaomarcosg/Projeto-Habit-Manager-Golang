@@ -11,7 +11,7 @@ type HabitService struct {
 	repo utils.HabitRepository
 }
 
-func NewService(repo utils.HabitRepository) *HabitService {
+func NewHabitFService(repo utils.HabitRepository) *HabitService {
 	return &HabitService{repo: repo}
 }
 
