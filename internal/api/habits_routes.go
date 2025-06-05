@@ -8,7 +8,7 @@ import (
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/services"
 )
 
-func NewHandler(svc *services.HabitService) http.Handler {
+func NewHabitHandler(svc *services.HabitService) http.Handler {
 
 	r := chi.NewMux()
 
