@@ -7,22 +7,22 @@ import (
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/utils"
 )
 
-type Service struct {
+type HabitService struct {
 	repo utils.HabitRepository
 }
 
-func NewService(repo utils.HabitRepository) *Service {
-	return &Service{repo: repo}
+func NewService(repo utils.HabitRepository) *HabitService {
+	return &HabitService{repo: repo}
 }
 
-func (s *Service) CreateHabit(ctx context.Context, habit entity.Habit) (int64, error) {
+func (s *HabitService) CreateHabit(ctx context.Context, habit entity.Habit) (int64, error) {
 	return s.repo.CreateHabit(ctx, habit)
 }
 
-func (s *Service) ListHabits(ctx context.Context) ([]entity.Habit, error) {
+func (s *HabitService) ListHabits(ctx context.Context) ([]entity.Habit, error) {
 	return s.repo.ListHabits(ctx)
 }
 
-func (s *Service) DeleteHabit(ctx context.Context, id int64) (bool, error) {
+func (s *HabitService) DeleteHabit(ctx context.Context, id int64) (bool, error) {
 	return s.repo.DeleteHabit(ctx, id)
 }
