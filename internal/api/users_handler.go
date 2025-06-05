@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/service"
+	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/services"
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/utils"
 )
 
@@ -15,7 +15,7 @@ type CreateUserReq struct {
 	Password string `json:"password"`
 }
 
-func handleSignupUser(svc *service.UserService) http.HandlerFunc {
+func handleSignupUser(svc *services.UserService) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		var user CreateUserReq
