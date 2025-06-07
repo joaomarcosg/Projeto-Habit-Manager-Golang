@@ -20,7 +20,7 @@ func EncodeJson[T any](w http.ResponseWriter, r *http.Request, statusCode int, d
 
 }
 
-func DecodeJson[T validator.Validator](r *http.Request) (T, map[string]string, error) {
+func DecodeValidJson[T validator.Validator](r *http.Request) (T, map[string]string, error) {
 
 	var data T
 	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
