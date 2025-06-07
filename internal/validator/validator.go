@@ -11,6 +11,8 @@ type Validator interface {
 	Valid(context.Context) Evaluator
 }
 
+var EmailRX = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+
 type Evaluator map[string]string
 
 func (e *Evaluator) AddFieldError(key, message string) {
