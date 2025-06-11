@@ -31,7 +31,7 @@ func handleSignupUser(svc *services.UserService) http.HandlerFunc {
 			}
 		}
 		_ = utils.EncodeJson(w, r, http.StatusCreated, map[string]any{
-			"user_id": id,
+			"user_id": id.ID,
 		})
 	}
 
