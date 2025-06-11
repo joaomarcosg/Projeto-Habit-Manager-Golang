@@ -1,39 +1,38 @@
 package api
 
 import (
-	"encoding/json"
+	"errors"
 	"log/slog"
 	"net/http"
 
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/services"
+	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/store/mysqlstore"
+	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/usecase/user"
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/utils"
 )
-
-type CreateUserReq struct {
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
 
 func handleSignupUser(svc *services.UserService) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		var user CreateUserReq
 
-		if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-			utils.SendJSON(w, utils.ApiResponse{Error: "invalid body"}, http.StatusUnprocessableEntity)
-			return
-		}
-
-		id, err := svc.CreateUser(r.Context(), user.Name, user.Email, user.Password)
+		data, problems, err := utils.DecodeValidJson[user.CreateUserReq](r)
 		if err != nil {
-			slog.Error("failed to create user", "error", err)
-			utils.SendJSON(w, utils.ApiResponse{Error: "could not create user"}, http.StatusInternalServerError)
+			_ = utils.EncodeJson(w, r, http.StatusUnprocessableEntity, problems)
 			return
 		}
-
-		utils.SendJSON(w, utils.ApiResponse{Data: id.ID}, http.StatusCreated)
-
+		id, err := svc.CreateUser(r.Context(), data.Name, data.Email, data.Password)
+		if err != nil {
+			if errors.Is(err, mysqlstore.ErrDuplicatedEmailOrUsername) {
+				slog.Error("failed to create user", "error", err)
+				_ = utils.EncodeJson(w, r, http.StatusUnprocessableEntity, map[string]any{
+					"error": "email or username already exist",
+				})
+				return
+			}
+		}
+		_ = utils.EncodeJson(w, r, http.StatusCreated, map[string]any{
+			"user_id": id,
+		})
 	}
 
 }
