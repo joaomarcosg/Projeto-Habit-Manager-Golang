@@ -2,8 +2,10 @@ package services
 
 import (
 	"context"
+	"errors"
 
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/entity"
+	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/store/mysqlstore"
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/utils"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -35,4 +37,23 @@ func (us *UserService) CreateUser(ctx context.Context, name, email, password str
 	}
 
 	return us.repo.CreateUser(ctx, user)
+}
+
+func (us *UserService) AuthenticateUser(ctx context.Context, email, password string) (entity.User, error) {
+
+	user, err := us.repo.GetUserByEmail(ctx, email)
+	if err != nil {
+		return entity.User{}, err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
+		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+			return entity.User{}, mysqlstore.ErrInvalidCredentials
+		}
+		return entity.User{}, err
+	}
+
+	return user, nil
+
 }
