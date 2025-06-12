@@ -63,6 +63,10 @@ func (r *UserRepository) GetUserByEmail(ctx context.Context, email string) (enti
 		return entity.User{}, err
 	}
 
-	return entity.User{ID: user.ID}, nil
+	return entity.User{
+		ID:       user.ID,
+		Email:    user.Email,
+		Password: user.Password,
+	}, nil
 
 }
