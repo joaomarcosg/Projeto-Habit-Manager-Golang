@@ -36,3 +36,28 @@ func handleSignupUser(svc *services.UserService) http.HandlerFunc {
 	}
 
 }
+
+func handleLoginUser(svc *services.UserService) http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		data, problems, err := utils.DecodeValidJson[user.LoginUserReq](r)
+		if err != nil {
+			utils.EncodeJson(w, r, http.StatusUnprocessableEntity, problems)
+		}
+		id, err := svc.AuthenticateUser(r.Context(), data.Email, data.Password)
+		if err != nil {
+			if errors.Is(err, mysqlstore.ErrInvalidCredentials) {
+				utils.EncodeJson(w, r, http.StatusBadRequest, map[string]any{
+					"error": "invalid email or password",
+				})
+				return
+			}
+			utils.EncodeJson(w, r, http.StatusInternalServerError, map[string]any{
+				"error": "unexpected server error",
+			})
+			return
+		}
+	}
+
+}
