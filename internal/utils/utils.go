@@ -23,6 +23,7 @@ type HabitRepository interface {
 
 type UserRepository interface {
 	CreateUser(ctx context.Context, user entity.User) (entity.User, error)
+	GetUserByEmail(ctx context.Context, email string) (entity.User, error)
 }
 
 func SendJSON(w http.ResponseWriter, resp ApiResponse, status int) {
