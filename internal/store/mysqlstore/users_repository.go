@@ -2,6 +2,7 @@ package mysqlstore
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"strings"
 
@@ -10,7 +11,10 @@ import (
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/entity"
 )
 
-var ErrDuplicatedEmailOrUsername = errors.New("name or email already exists")
+var (
+	ErrDuplicatedEmailOrUsername = errors.New("name or email already exists")
+	ErrInvalidCredentials        = errors.New("invalid credentials")
+)
 
 type UserRepository struct {
 	q *Queries
@@ -46,5 +50,19 @@ func (r *UserRepository) CreateUser(ctx context.Context, user entity.User) (enti
 	}
 
 	return user, nil
+
+}
+
+func (r *UserRepository) GetUserByEmail(ctx context.Context, email string) (entity.User, error) {
+
+	user, err := r.q.GetUserByEmail(ctx, email)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return entity.User{}, ErrInvalidCredentials
+		}
+		return entity.User{}, err
+	}
+
+	return entity.User{ID: user.ID}, nil
 
 }
