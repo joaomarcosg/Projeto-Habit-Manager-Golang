@@ -39,21 +39,26 @@ func (us *UserService) CreateUser(ctx context.Context, name, email, password str
 	return us.repo.CreateUser(ctx, user)
 }
 
-func (us *UserService) AuthenticateUser(ctx context.Context, email, password string) (entity.User, error) {
+func (us *UserService) AuthenticateUser(ctx context.Context, email, password string) (entity.User, string, error) {
 
 	user, err := us.repo.GetUserByEmail(ctx, email)
 	if err != nil {
-		return entity.User{}, err
+		return entity.User{}, "", err
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
 		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
-			return entity.User{}, mysqlstore.ErrInvalidCredentials
+			return entity.User{}, "", mysqlstore.ErrInvalidCredentials
 		}
-		return entity.User{}, err
+		return entity.User{}, "", err
 	}
 
-	return user, nil
+	token, err := utils.GenerateToken(user.ID, user.Email)
+	if err != nil {
+		return entity.User{}, "", err
+	}
+
+	return user, token, nil
 
 }
