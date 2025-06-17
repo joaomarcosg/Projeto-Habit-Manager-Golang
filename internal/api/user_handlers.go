@@ -45,7 +45,7 @@ func handleLoginUser(svc *services.UserService) http.HandlerFunc {
 		if err != nil {
 			utils.EncodeJson(w, r, http.StatusUnprocessableEntity, problems)
 		}
-		id, err := svc.AuthenticateUser(r.Context(), data.Email, data.Password)
+		id, token, err := svc.AuthenticateUser(r.Context(), data.Email, data.Password)
 		if err != nil {
 			if errors.Is(err, mysqlstore.ErrInvalidCredentials) {
 				utils.EncodeJson(w, r, http.StatusBadRequest, map[string]any{
@@ -58,6 +58,12 @@ func handleLoginUser(svc *services.UserService) http.HandlerFunc {
 			})
 			return
 		}
+
+		utils.EncodeJson(w, r, http.StatusOK, map[string]any{
+			"user_id": id,
+			"token":   token,
+		})
+
 	}
 
 }
