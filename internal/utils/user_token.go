@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"os"
 	"time"
 
@@ -21,5 +22,12 @@ func GenerateToken(userID, email string) (string, error) {
 		"exp":     time.Now().Add(24 * time.Hour).Unix(),
 	}
 
-	return "", nil
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	tokenString, err := token.SignedString([]byte(secret))
+	if err != nil {
+		return "", errors.New("error to generate jwt token")
+	}
+
+	return tokenString, nil
 }
