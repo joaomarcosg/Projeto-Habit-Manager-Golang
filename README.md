@@ -39,7 +39,7 @@ Nesse projeto tive a oportunidade de aplicar meus conhecimentos em arquitetura, 
 - Listar hábitos: ```/habits/list```
 - Criar usuários: ```/users/signup```
 
-## Estrutura de pastas
+## 📂 Estrutura de pastas
 
 ```shell
 ├───cmd
