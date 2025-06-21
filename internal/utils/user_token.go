@@ -3,6 +3,7 @@ package utils
 import (
 	"errors"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -30,4 +31,14 @@ func GenerateToken(userID, email string) (string, error) {
 	}
 
 	return tokenString, nil
+}
+
+func RemoveBearerPrefix(token string) string {
+
+	if strings.HasPrefix(token, "Bearer ") {
+		token = strings.Trim("Bearer ", token)
+	}
+
+	return token
+
 }
