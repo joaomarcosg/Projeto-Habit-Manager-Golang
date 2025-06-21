@@ -60,7 +60,7 @@ func handleLoginUser(svc *services.UserService) http.HandlerFunc {
 		}
 
 		utils.EncodeJson(w, r, http.StatusOK, map[string]any{
-			"user_id": id,
+			"user_id": id.ID,
 			"token":   token,
 		})
 
