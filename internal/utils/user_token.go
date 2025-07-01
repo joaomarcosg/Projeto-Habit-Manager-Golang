@@ -33,6 +33,38 @@ func GenerateToken(userID, email string) (string, error) {
 	return tokenString, nil
 }
 
+func VerifyToken(tokenValue string) (string, error) {
+
+	secret := os.Getenv(JWT_SECRET_KEY)
+
+	token, err := jwt.Parse(RemoveBearerPrefix(tokenValue), func(t *jwt.Token) (interface{}, error) {
+
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); ok {
+			return []byte(secret), nil
+		}
+
+		return nil, errors.New("invalid token")
+
+	})
+
+	if err != nil {
+		return "", errors.New("invalid token")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || !token.Valid {
+		return "", errors.New("invalid token")
+	}
+
+	userID, ok := claims["user_id"].(string)
+	if !ok {
+		return "", errors.New("user_id not found in token")
+	}
+
+	return userID, nil
+
+}
+
 func RemoveBearerPrefix(token string) string {
 
 	if strings.HasPrefix(token, "Bearer ") {
