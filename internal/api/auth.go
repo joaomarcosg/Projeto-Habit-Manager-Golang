@@ -7,7 +7,9 @@ import (
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/utils"
 )
 
-const userIDKey = "user_id"
+type contextKey string
+
+const userIDKey contextKey = "user_id"
 
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
