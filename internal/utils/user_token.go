@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"context"
 	"errors"
 	"os"
 	"strings"
@@ -73,4 +74,11 @@ func RemoveBearerPrefix(token string) string {
 
 	return token
 
+}
+
+const UserIDKey = "user_id"
+
+func GetUserIDFromContext(ctx context.Context) (string, bool) {
+	userID, ok := ctx.Value(UserIDKey).(string)
+	return userID, ok
 }
