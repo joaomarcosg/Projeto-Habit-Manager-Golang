@@ -19,9 +19,10 @@ INSERT INTO habits (
     frequency,
     start_date,
     target_date,
-    priority
+    priority,
+    user_id
 )
-VALUES (?, ?, ?, ?, ?, ?, ?)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 type CreateHabitParams struct {
@@ -32,6 +33,7 @@ type CreateHabitParams struct {
 	StartDate   time.Time           `json:"start_date"`
 	TargetDate  time.Time           `json:"target_date"`
 	Priority    uint8               `json:"priority"`
+	UserID      string              `json:"user_id"`
 }
 
 func (q *Queries) CreateHabit(ctx context.Context, arg CreateHabitParams) (sql.Result, error) {
@@ -43,26 +45,37 @@ func (q *Queries) CreateHabit(ctx context.Context, arg CreateHabitParams) (sql.R
 		arg.StartDate,
 		arg.TargetDate,
 		arg.Priority,
+		arg.UserID,
 	)
 }
 
 const deleteHabit = `-- name: DeleteHabit :exec
 DELETE FROM habits
-WHERE id = ?
+WHERE id = ? AND user_id = ?
 `
 
-func (q *Queries) DeleteHabit(ctx context.Context, id int32) error {
-	_, err := q.db.ExecContext(ctx, deleteHabit, id)
+type DeleteHabitParams struct {
+	ID     int32  `json:"id"`
+	UserID string `json:"user_id"`
+}
+
+func (q *Queries) DeleteHabit(ctx context.Context, arg DeleteHabitParams) error {
+	_, err := q.db.ExecContext(ctx, deleteHabit, arg.ID, arg.UserID)
 	return err
 }
 
 const getHabitById = `-- name: GetHabitById :one
 SELECT id, name, category, description, frequency, start_date, target_date, priority, created_at, updated_at, user_id FROM habits
-WHERE id = ?
+WHERE id = ? AND user_id = ?
 `
 
-func (q *Queries) GetHabitById(ctx context.Context, id int32) (Habit, error) {
-	row := q.db.QueryRowContext(ctx, getHabitById, id)
+type GetHabitByIdParams struct {
+	ID     int32  `json:"id"`
+	UserID string `json:"user_id"`
+}
+
+func (q *Queries) GetHabitById(ctx context.Context, arg GetHabitByIdParams) (Habit, error) {
+	row := q.db.QueryRowContext(ctx, getHabitById, arg.ID, arg.UserID)
 	var i Habit
 	err := row.Scan(
 		&i.ID,
@@ -131,7 +144,7 @@ SET
     start_date = ?,
     target_date = ?,
     priority = ?
-WHERE id = ?
+WHERE id = ? AND user_id = ?
 `
 
 type UpdateHabitParams struct {
@@ -143,6 +156,7 @@ type UpdateHabitParams struct {
 	TargetDate  time.Time           `json:"target_date"`
 	Priority    uint8               `json:"priority"`
 	ID          int32               `json:"id"`
+	UserID      string              `json:"user_id"`
 }
 
 func (q *Queries) UpdateHabit(ctx context.Context, arg UpdateHabitParams) error {
@@ -155,6 +169,7 @@ func (q *Queries) UpdateHabit(ctx context.Context, arg UpdateHabitParams) error 
 		arg.TargetDate,
 		arg.Priority,
 		arg.ID,
+		arg.UserID,
 	)
 	return err
 }
