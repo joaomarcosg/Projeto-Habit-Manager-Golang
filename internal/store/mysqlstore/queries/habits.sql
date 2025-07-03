@@ -12,6 +12,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?);
 
 -- name: ListHabits :many
 SELECT * FROM habits
+WHERE user_id = ?
 ORDER BY id;
 
 -- name: GetHabitById :one
