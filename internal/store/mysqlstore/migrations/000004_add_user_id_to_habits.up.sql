@@ -1,0 +1,3 @@
+ALTER TABLE habits
+ADD COLUMN user_id CHAR(36) NOT NULL,
+ADD CONSTRAINT fk_habits_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
