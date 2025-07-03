@@ -60,7 +60,13 @@ func handleListHabits(svc *services.HabitService) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		habits, err := svc.ListHabits(r.Context())
+		userID, ok := r.Context().Value(userIDKey).(string)
+		if !ok || userID == "" {
+			utils.SendJSON(w, utils.ApiResponse{Error: "unauthorized"}, http.StatusUnauthorized)
+			return
+		}
+
+		habits, err := svc.ListHabits(r.Context(), userID)
 		if err != nil {
 			slog.Error("failed to get habits", "error", err)
 			utils.SendJSON(w, utils.ApiResponse{Error: "could not list habits"}, http.StatusInternalServerError)
