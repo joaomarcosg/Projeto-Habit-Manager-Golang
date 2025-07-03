@@ -15,6 +15,7 @@ func NewHabitHandler(svc *services.HabitService) http.Handler {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.RequestID)
 	r.Use(middleware.Logger)
+	r.Use(AuthMiddleware)
 
 	r.Post("/create", handleCreateHabit(svc))
 	r.Get("/list", handleListHabits(svc))
