@@ -6,7 +6,8 @@ INSERT INTO habits (
     frequency,
     start_date,
     target_date,
-    priority
+    priority,
+    user_id
 )
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
@@ -17,11 +18,11 @@ ORDER BY id;
 
 -- name: GetHabitById :one
 SELECT * FROM habits
-WHERE id = ?;
+WHERE id = ? AND user_id = ?;
 
 -- name: DeleteHabit :exec
 DELETE FROM habits
-WHERE id = ?;
+WHERE id = ? AND user_id = ?;
 
 -- name: UpdateHabit :exec
 UPDATE habits
@@ -33,4 +34,4 @@ SET
     start_date = ?,
     target_date = ?,
     priority = ?
-WHERE id = ?;
+WHERE id = ? AND user_id = ?;
