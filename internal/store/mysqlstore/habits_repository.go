@@ -14,7 +14,7 @@ func NewHabitRepository(q *Queries) *HabitRepository {
 	return &HabitRepository{q: q}
 }
 
-func (r *HabitRepository) CreateHabit(ctx context.Context, habit entity.Habit) (int64, error) {
+func (r *HabitRepository) CreateHabit(ctx context.Context, userID string, habit entity.Habit) (int64, error) {
 	result, err := r.q.CreateHabit(ctx, CreateHabitParams{
 		Name:        habit.Name,
 		Category:    habit.Category,
@@ -26,6 +26,7 @@ func (r *HabitRepository) CreateHabit(ctx context.Context, habit entity.Habit) (
 		StartDate:  habit.StartDate,
 		TargetDate: habit.TargetDate,
 		Priority:   habit.Priority,
+		UserID:     userID,
 	})
 
 	if err != nil {
@@ -70,9 +71,12 @@ func (r *HabitRepository) ListHabits(ctx context.Context, userID string) ([]enti
 
 }
 
-func (r *HabitRepository) DeleteHabit(ctx context.Context, id int64) (bool, error) {
+func (r *HabitRepository) DeleteHabit(ctx context.Context, userID string, id int64) (bool, error) {
 
-	err := r.q.DeleteHabit(ctx, int32(id))
+	err := r.q.DeleteHabit(ctx, DeleteHabitParams{
+		ID:     int32(id),
+		UserID: userID,
+	})
 	if err != nil {
 		return false, err
 	}
