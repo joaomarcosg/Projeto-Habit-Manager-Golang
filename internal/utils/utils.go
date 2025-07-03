@@ -16,9 +16,9 @@ type ApiResponse struct {
 }
 
 type HabitRepository interface {
-	CreateHabit(ctx context.Context, habit entity.Habit) (int64, error)
+	CreateHabit(ctx context.Context, userID string, habit entity.Habit) (int64, error)
 	ListHabits(ctx context.Context, userID string) ([]entity.Habit, error)
-	DeleteHabit(ctx context.Context, id int64) (bool, error)
+	DeleteHabit(ctx context.Context, userID string, id int64) (bool, error)
 }
 
 type UserRepository interface {
