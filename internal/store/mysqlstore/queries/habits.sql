@@ -9,7 +9,7 @@ INSERT INTO habits (
     priority,
     user_id
 )
-VALUES (?, ?, ?, ?, ?, ?, ?);
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 
 -- name: ListHabits :many
 SELECT * FROM habits
