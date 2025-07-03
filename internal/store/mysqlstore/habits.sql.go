@@ -57,7 +57,7 @@ func (q *Queries) DeleteHabit(ctx context.Context, id int32) error {
 }
 
 const getHabitById = `-- name: GetHabitById :one
-SELECT id, name, category, description, frequency, start_date, target_date, priority, created_at, updated_at FROM habits
+SELECT id, name, category, description, frequency, start_date, target_date, priority, created_at, updated_at, user_id FROM habits
 WHERE id = ?
 `
 
@@ -75,17 +75,19 @@ func (q *Queries) GetHabitById(ctx context.Context, id int32) (Habit, error) {
 		&i.Priority,
 		&i.CreatedAt,
 		&i.UpdatedAt,
+		&i.UserID,
 	)
 	return i, err
 }
 
 const listHabits = `-- name: ListHabits :many
-SELECT id, name, category, description, frequency, start_date, target_date, priority, created_at, updated_at FROM habits
+SELECT id, name, category, description, frequency, start_date, target_date, priority, created_at, updated_at, user_id FROM habits
+WHERE user_id = ?
 ORDER BY id
 `
 
-func (q *Queries) ListHabits(ctx context.Context) ([]Habit, error) {
-	rows, err := q.db.QueryContext(ctx, listHabits)
+func (q *Queries) ListHabits(ctx context.Context, userID string) ([]Habit, error) {
+	rows, err := q.db.QueryContext(ctx, listHabits, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -104,6 +106,7 @@ func (q *Queries) ListHabits(ctx context.Context) ([]Habit, error) {
 			&i.Priority,
 			&i.CreatedAt,
 			&i.UpdatedAt,
+			&i.UserID,
 		); err != nil {
 			return nil, err
 		}

@@ -69,6 +69,7 @@ type Habit struct {
 	Priority    uint8               `json:"priority"`
 	CreatedAt   sql.NullTime        `json:"created_at"`
 	UpdatedAt   sql.NullTime        `json:"updated_at"`
+	UserID      string              `json:"user_id"`
 }
 
 type User struct {
