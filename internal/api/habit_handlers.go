@@ -28,6 +28,12 @@ func handleCreateHabit(svc *services.HabitService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var input inputHabit
 
+		userID, ok := r.Context().Value(userIDKey).(string)
+		if !ok || userID == "" {
+			utils.SendJSON(w, utils.ApiResponse{Error: "unauthorized"}, http.StatusUnauthorized)
+			return
+		}
+
 		if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 			utils.SendJSON(w, utils.ApiResponse{Error: "invalid body"}, http.StatusUnprocessableEntity)
 			return
@@ -45,7 +51,7 @@ func handleCreateHabit(svc *services.HabitService) http.HandlerFunc {
 
 		var id int64
 
-		id, err := svc.CreateHabit(r.Context(), habit)
+		id, err := svc.CreateHabit(r.Context(), userID, habit)
 		if err != nil {
 			slog.Error("failed to create habit", "error", err)
 			utils.SendJSON(w, utils.ApiResponse{Error: "could not create habit"}, http.StatusInternalServerError)
@@ -83,6 +89,12 @@ func handleDeleteHabit(svc *services.HabitService) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
+		userID, ok := r.Context().Value(userIDKey).(string)
+		if !ok || userID == "" {
+			utils.SendJSON(w, utils.ApiResponse{Error: "unauthorized"}, http.StatusUnauthorized)
+			return
+		}
+
 		idStr := chi.URLParam(r, "id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
 		if err != nil {
@@ -90,8 +102,7 @@ func handleDeleteHabit(svc *services.HabitService) http.HandlerFunc {
 			return
 		}
 
-		ok, err := svc.DeleteHabit(r.Context(), id)
-
+		ok, err = svc.DeleteHabit(r.Context(), userID, id)
 		if err != nil {
 			slog.Error("failed to delete habit", "error", err)
 			utils.SendJSON(w, utils.ApiResponse{Error: "failed to delete habit"}, http.StatusInternalServerError)
