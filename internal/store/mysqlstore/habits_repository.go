@@ -40,9 +40,9 @@ func (r *HabitRepository) CreateHabit(ctx context.Context, habit entity.Habit) (
 	return id, nil
 }
 
-func (r *HabitRepository) ListHabits(ctx context.Context) ([]entity.Habit, error) {
+func (r *HabitRepository) ListHabits(ctx context.Context, userID string) ([]entity.Habit, error) {
 
-	result, err := r.q.ListHabits(ctx)
+	result, err := r.q.ListHabits(ctx, userID)
 	if err != nil {
 		return []entity.Habit{}, err
 	}
