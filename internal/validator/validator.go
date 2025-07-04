@@ -47,3 +47,13 @@ func MinChars(value string, n int) bool {
 func Matches(value string, rx *regexp.Regexp) bool {
 	return rx.MatchString(value)
 }
+
+func MinPriority(value uint8) bool {
+	const n uint8 = 1
+	return value >= n
+}
+
+func MaxPriority(value uint8) bool {
+	const n uint8 = 10
+	return value <= 10
+}
