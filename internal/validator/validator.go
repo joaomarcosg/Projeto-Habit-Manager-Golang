@@ -55,5 +55,5 @@ func MinPriority(value uint8) bool {
 
 func MaxPriority(value uint8) bool {
 	const n uint8 = 10
-	return value <= 10
+	return value <= n
 }
