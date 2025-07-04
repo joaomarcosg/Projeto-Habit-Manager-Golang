@@ -55,7 +55,6 @@ func handleCreateHabit(svc *services.HabitService) http.HandlerFunc {
 			"habit_id": id,
 		})
 
-		utils.SendJSON(w, utils.ApiResponse{ID: id}, http.StatusCreated)
 	}
 }
 
