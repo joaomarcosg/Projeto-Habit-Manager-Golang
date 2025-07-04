@@ -68,18 +68,24 @@ func handleListHabits(svc *services.HabitService) http.HandlerFunc {
 
 		userID, ok := r.Context().Value(userIDKey).(string)
 		if !ok || userID == "" {
-			utils.SendJSON(w, utils.ApiResponse{Error: "unauthorized"}, http.StatusUnauthorized)
+			utils.EncodeJson(w, r, http.StatusUnauthorized, map[string]any{
+				"error": "unauthorized",
+			})
 			return
 		}
 
 		habits, err := svc.ListHabits(r.Context(), userID)
 		if err != nil {
 			slog.Error("failed to get habits", "error", err)
-			utils.SendJSON(w, utils.ApiResponse{Error: "could not list habits"}, http.StatusInternalServerError)
+			utils.EncodeJson(w, r, http.StatusInternalServerError, map[string]any{
+				"error": "could not list habits",
+			})
 			return
 		}
 
-		utils.SendJSON(w, utils.ApiResponse{Data: habits}, http.StatusOK)
+		utils.EncodeJson(w, r, http.StatusOK, map[string]any{
+			"habtis": habits,
+		})
 
 	}
 
@@ -91,25 +97,33 @@ func handleDeleteHabit(svc *services.HabitService) http.HandlerFunc {
 
 		userID, ok := r.Context().Value(userIDKey).(string)
 		if !ok || userID == "" {
-			utils.SendJSON(w, utils.ApiResponse{Error: "unauthorized"}, http.StatusUnauthorized)
+			utils.EncodeJson(w, r, http.StatusUnauthorized, map[string]any{
+				"error": "unauthorized",
+			})
 			return
 		}
 
 		idStr := chi.URLParam(r, "id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
 		if err != nil {
-			utils.SendJSON(w, utils.ApiResponse{Error: "invalid param"}, http.StatusBadRequest)
+			utils.EncodeJson(w, r, http.StatusBadRequest, map[string]any{
+				"error": "invalid param",
+			})
 			return
 		}
 
 		ok, err = svc.DeleteHabit(r.Context(), userID, id)
 		if err != nil {
 			slog.Error("failed to delete habit", "error", err)
-			utils.SendJSON(w, utils.ApiResponse{Error: "failed to delete habit"}, http.StatusInternalServerError)
+			utils.EncodeJson(w, r, http.StatusInternalServerError, map[string]any{
+				"error": "failed to delete habit",
+			})
 			return
 		}
 
-		utils.SendJSON(w, utils.ApiResponse{Data: ok}, http.StatusOK)
+		utils.EncodeJson(w, r, http.StatusOK, map[string]any{
+			"deleted": ok,
+		})
 
 	}
 }
