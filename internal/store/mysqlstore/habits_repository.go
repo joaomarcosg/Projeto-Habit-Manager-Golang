@@ -85,7 +85,7 @@ func (r *HabitRepository) DeleteHabit(ctx context.Context, userID string, id int
 
 }
 
-func (r *HabitRepository) UpdateHabit(ctx context.Context, userID string, id int64, habit entity.Habit) error {
+func (r *HabitRepository) UpdateHabit(ctx context.Context, userID string, id int64, habit entity.Habit) (int64, error) {
 	err := r.q.UpdateHabit(ctx, UpdateHabitParams{
 		ID:          int32(id),
 		Name:        habit.Name,
@@ -101,9 +101,9 @@ func (r *HabitRepository) UpdateHabit(ctx context.Context, userID string, id int
 	})
 
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	return id, nil
 
 }
