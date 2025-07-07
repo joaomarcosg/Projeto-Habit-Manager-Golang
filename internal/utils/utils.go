@@ -19,6 +19,7 @@ type HabitRepository interface {
 	CreateHabit(ctx context.Context, userID string, habit entity.Habit) (int64, error)
 	ListHabits(ctx context.Context, userID string) ([]entity.Habit, error)
 	DeleteHabit(ctx context.Context, userID string, id int64) (bool, error)
+	UpdateHabit(ctx context.Context, userID string, habit entity.Habit) error
 }
 
 type UserRepository interface {
