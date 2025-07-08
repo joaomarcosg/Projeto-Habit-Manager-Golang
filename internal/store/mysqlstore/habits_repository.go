@@ -97,6 +97,7 @@ func (r *HabitRepository) UpdateHabit(ctx context.Context, userID string, id int
 		},
 		StartDate:  habit.StartDate,
 		TargetDate: habit.TargetDate,
+		Priority:   habit.Priority,
 		UserID:     userID,
 	})
 
