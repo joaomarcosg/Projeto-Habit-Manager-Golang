@@ -163,7 +163,7 @@ func handleUpdateHabit(svc *services.HabitService) http.HandlerFunc {
 
 		id, err := svc.UpdateHabit(r.Context(), userID, habitID, habit)
 		if err != nil {
-			slog.Error("failed to delete habit", "error", err)
+			slog.Error("failed to update habit", "error", err)
 			utils.EncodeJson(w, r, http.StatusInternalServerError, map[string]any{
 				"error": "failed to update habit",
 			})
