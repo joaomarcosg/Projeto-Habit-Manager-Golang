@@ -11,6 +11,48 @@ import (
 	"time"
 )
 
+type HabitStatusStatus string
+
+const (
+	HabitStatusStatusDone    HabitStatusStatus = "done"
+	HabitStatusStatusNotDone HabitStatusStatus = "not_done"
+)
+
+func (e *HabitStatusStatus) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = HabitStatusStatus(s)
+	case string:
+		*e = HabitStatusStatus(s)
+	default:
+		return fmt.Errorf("unsupported scan type for HabitStatusStatus: %T", src)
+	}
+	return nil
+}
+
+type NullHabitStatusStatus struct {
+	HabitStatusStatus HabitStatusStatus `json:"habit_status_status"`
+	Valid             bool              `json:"valid"` // Valid is true if HabitStatusStatus is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullHabitStatusStatus) Scan(value interface{}) error {
+	if value == nil {
+		ns.HabitStatusStatus, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.HabitStatusStatus.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullHabitStatusStatus) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.HabitStatusStatus), nil
+}
+
 type HabitsFrequency string
 
 const (
@@ -70,6 +112,16 @@ type Habit struct {
 	CreatedAt   sql.NullTime        `json:"created_at"`
 	UpdatedAt   sql.NullTime        `json:"updated_at"`
 	UserID      string              `json:"user_id"`
+}
+
+type HabitStatus struct {
+	ID        int32             `json:"id"`
+	HabitID   int32             `json:"habit_id"`
+	UserID    string            `json:"user_id"`
+	Status    HabitStatusStatus `json:"status"`
+	Date      time.Time         `json:"date"`
+	CreatedAt sql.NullTime      `json:"created_at"`
+	UpdatedAt sql.NullTime      `json:"updated_at"`
 }
 
 type User struct {
