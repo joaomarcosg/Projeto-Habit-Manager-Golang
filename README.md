@@ -22,7 +22,7 @@
 
 A API de gerenciamento de hábitos (Habit Manager API) é uma aplicação para o controle e gerenciamento de hábitos pessoais. Com ela podemos criar e medir o progresso dos nossos hábitos.
 
-Toda a API foi desenvolvida em **Go** e com auxílio do framework **Chi** para acelerar o desenvolvimento do projeto. Para a persistência dos dados usei **MySQL** em conjunto com **Docker** para rodar na aplicação. Em relação a autenticação para acesso aos recursos optei pelo JWT.
+Toda a API foi desenvolvida em **Go** e com auxílio do framework **Chi** para acelerar o desenvolvimento do projeto. Para a persistência dos dados usei **MySQL** em conjunto com **Docker** para rodar na aplicação. Em relação a autenticação para acesso aos recursos optei pelo **JWT**.
 
 Nesse projeto tive a oportunidade de aplicar meus conhecimentos em APIs RESTful, tratamento de erros, persistência de dados usando ferramentas como SQLC, autenticação, tratamento de JSON.
 
@@ -30,6 +30,7 @@ Nesse projeto tive a oportunidade de aplicar meus conhecimentos em APIs RESTful,
 
 - CRUD de hábitos
 - CRUD de usuários
+- Status do hábito 
 - Login e Logout de usuários com autenticação JWT
 
 
@@ -40,6 +41,7 @@ Nesse projeto tive a oportunidade de aplicar meus conhecimentos em APIs RESTful,
 - Atualizar hábitos ```/habits/update{id}```
 - Deletar hábitos ```/habits/delete{id}```
 - Criar usuários: ```/users/signup```
+- Atualizar status do hábito ```/habits/updatestatus/{id}```
 
 
 ## 📂 Estrutura de pastas
