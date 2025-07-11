@@ -2,6 +2,7 @@ package mysqlstore
 
 import (
 	"context"
+	"time"
 
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/entity"
 )
@@ -106,5 +107,22 @@ func (r *HabitRepository) UpdateHabit(ctx context.Context, userID string, id int
 	}
 
 	return id, nil
+
+}
+
+func (r *HabitRepository) UpdateHabitStatus(ctx context.Context, userID string, id int64, status string, date time.Time) (bool, error) {
+
+	err := r.q.UpdateHabitStatus(ctx, UpdateHabitStatusParams{
+		HabitID: int32(id),
+		UserID:  userID,
+		Status:  HabitStatusStatus(status),
+		Date:    date,
+	})
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
 
 }
