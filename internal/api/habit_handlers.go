@@ -176,3 +176,47 @@ func handleUpdateHabit(svc *services.HabitService) http.HandlerFunc {
 
 	}
 }
+
+func handleUpdateHabitStatus(svc *services.HabitService) http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		userID, ok := r.Context().Value(userIDKey).(string)
+		if !ok || userID == "" {
+			utils.EncodeJson(w, r, http.StatusUnauthorized, map[string]any{
+				"error": "unauthorized",
+			})
+			return
+		}
+
+		data, problems, err := utils.DecodeValidJson[habit.UpdateHabitStatusReq](r)
+		if err != nil {
+			_ = utils.EncodeJson(w, r, http.StatusUnprocessableEntity, problems)
+			return
+		}
+
+		idStr := chi.URLParam(r, "id")
+		id, err := strconv.ParseInt(idStr, 10, 64)
+		if err != nil {
+			utils.EncodeJson(w, r, http.StatusBadRequest, map[string]any{
+				"error": "invalid param",
+			})
+			return
+		}
+
+		ok, err = svc.UpdateHabitStatus(r.Context(), userID, id, data.Status, data.Date)
+		if err != nil {
+			slog.Error("failed to update habit status", "error", err)
+			utils.EncodeJson(w, r, http.StatusInternalServerError, map[string]any{
+				"error": "failed to update habit status",
+			})
+			return
+		}
+
+		utils.EncodeJson(w, r, http.StatusOK, map[string]any{
+			"update habit status": ok,
+		})
+
+	}
+
+}
