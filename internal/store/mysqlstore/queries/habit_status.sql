@@ -2,7 +2,7 @@
 INSERT INTO habit_status (habit_id, user_id, status, date)
 VALUES (?, ?, ?, ?)
 ON DUPLICATE KEY UPDATE
-    status = VALUES(status)
+    status = VALUES(status),
     updated_at = CURRENT_TIMESTAMP;
 
 -- name: HabitTrack :one
