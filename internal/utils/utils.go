@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log/slog"
 	"net/http"
+	"time"
 
 	"github.com/joaomarcosg/Projeto-Habit-Manager-Golang/internal/entity"
 )
@@ -20,6 +21,7 @@ type HabitRepository interface {
 	ListHabits(ctx context.Context, userID string) ([]entity.Habit, error)
 	DeleteHabit(ctx context.Context, userID string, id int64) (bool, error)
 	UpdateHabit(ctx context.Context, userID string, id int64, habit entity.Habit) (int64, error)
+	UpdateHabitStatus(ctx context.Context, userID string, id int64, status string, date time.Time) (bool, error)
 }
 
 type UserRepository interface {
