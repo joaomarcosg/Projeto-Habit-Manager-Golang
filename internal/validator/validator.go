@@ -57,3 +57,7 @@ func MaxPriority(value uint8) bool {
 	const n uint8 = 10
 	return value <= n
 }
+
+func HabitStatus(value string) bool {
+	return value == "done" || value == "not_done"
+}
