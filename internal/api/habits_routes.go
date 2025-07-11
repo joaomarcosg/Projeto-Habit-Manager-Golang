@@ -21,6 +21,7 @@ func NewHabitHandler(svc *services.HabitService) http.Handler {
 	r.Get("/list", handleListHabits(svc))
 	r.Delete("/delete/{id:[0-9]+}", handleDeleteHabit(svc))
 	r.Put("/update/{id:[0-9]+}", handleUpdateHabit(svc))
+	r.Put("/updatestatus/{id:[0-9]}", handleUpdateHabitStatus(svc))
 
 	return r
 }
