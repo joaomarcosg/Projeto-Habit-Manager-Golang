@@ -22,6 +22,7 @@ type HabitRepository interface {
 	DeleteHabit(ctx context.Context, userID string, id int64) (bool, error)
 	UpdateHabit(ctx context.Context, userID string, id int64, habit entity.Habit) (int64, error)
 	UpdateHabitStatus(ctx context.Context, userID string, id int64, status string, date time.Time) (bool, error)
+	HabitTrack(ctx context.Context, userID string, id int64, startDate, targetDate time.Time) (int64, error)
 }
 
 type UserRepository interface {
