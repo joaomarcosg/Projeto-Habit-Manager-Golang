@@ -220,3 +220,47 @@ func handleUpdateHabitStatus(svc *services.HabitService) http.HandlerFunc {
 	}
 
 }
+
+func handleHabitTrack(svc *services.HabitService) http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		userID, ok := r.Context().Value(userIDKey).(string)
+		if !ok || userID == "" {
+			utils.EncodeJson(w, r, http.StatusUnauthorized, map[string]any{
+				"error": "unauthorized",
+			})
+			return
+		}
+
+		data, err := utils.DecodeJson[habit.TrackHabitReq](r)
+		if err != nil {
+			_ = utils.EncodeJson(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		idStr := chi.URLParam(r, "id")
+		id, err := strconv.ParseInt(idStr, 10, 64)
+		if err != nil {
+			utils.EncodeJson(w, r, http.StatusBadRequest, map[string]any{
+				"error": "invalid param",
+			})
+			return
+		}
+
+		track, err := svc.HabitTrack(r.Context(), userID, id, data.StartDate, data.TargetDate)
+		if err != nil {
+			slog.Error("failed to get habit track", "error", err)
+			utils.EncodeJson(w, r, http.StatusInternalServerError, map[string]any{
+				"error": "failed to get habit track",
+			})
+			return
+		}
+
+		utils.EncodeJson(w, r, http.StatusOK, map[string]any{
+			"habit track": track,
+		})
+
+	}
+
+}
