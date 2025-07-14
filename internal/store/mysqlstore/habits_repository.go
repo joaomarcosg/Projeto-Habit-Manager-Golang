@@ -126,3 +126,20 @@ func (r *HabitRepository) UpdateHabitStatus(ctx context.Context, userID string, 
 	return true, nil
 
 }
+
+func (r *HabitRepository) HabitTrack(ctx context.Context, userID string, id int64, startDate, targetDate time.Time) (int64, error) {
+
+	track, err := r.q.HabitTrack(ctx, HabitTrackParams{
+		HabitID:  int32(id),
+		UserID:   userID,
+		FromDate: startDate,
+		ToDate:   targetDate,
+	})
+
+	if err != nil {
+		return 0, err
+	}
+
+	return track, nil
+
+}
