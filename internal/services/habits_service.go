@@ -35,3 +35,7 @@ func (s *HabitService) UpdateHabit(ctx context.Context, userID string, id int64,
 func (s *HabitService) UpdateHabitStatus(ctx context.Context, userID string, id int64, status string, date time.Time) (bool, error) {
 	return s.repo.UpdateHabitStatus(ctx, userID, id, status, date)
 }
+
+func (s *HabitService) HabitTrack(ctx context.Context, userID string, id int64, startDate, targetDate time.Time) (int64, error) {
+	return s.repo.HabitTrack(ctx, userID, id, startDate, targetDate)
+}
